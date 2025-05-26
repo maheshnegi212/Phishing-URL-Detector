@@ -1,0 +1,17 @@
+import re
+from urllib.parse import urlparse
+
+def extract_features(url):
+    features = {}
+    parsed = urlparse(url)
+
+    features['url_length'] = len(url)
+    features['has_ip'] = bool(re.search(r'\d+\.\d+\.\d+\.\d+', url))
+    features['has_at_symbol'] = '@' in url
+    features['has_https'] = parsed.scheme == 'https'
+    features['num_dots'] = url.count('.')
+    features['num_hyphens'] = url.count('-')
+    features['num_subdomains'] = len(parsed.netloc.split('.')) - 2
+    features['has_suspicious_words'] = any(word in url for word in ['login', 'verify', 'secure', 'account'])
+
+    return list(features.values())
